@@ -1,0 +1,113 @@
+<!doctype html>
+</div>
+
+
+<form id="applyForm" style="margin-top:12px">
+<label>姓名 / 团队名</label>
+<input id="name" placeholder="例如：林先生 / 红河团队" required />
+
+
+<label>手机号（微信号）</label>
+<input id="phone" placeholder="用于优先邀请与沟通" required />
+
+
+<label>所在地区</label>
+<input id="region" placeholder="例如：粤/浙/北京" />
+
+
+<label>团队规模 / 渠道规模（估算）</label>
+<input id="scale" placeholder="示例：代理 50000 人 / 每月拉新 2000 人" />
+
+
+<label>你能带来的资源（简述）</label>
+<textarea id="resources" placeholder="如：渠道、用户类型、平台、合作经验等"></textarea>
+
+
+<label>是否为团队长（打勾表示是）</label>
+<select id="isLeader"><option value="1">是（团队长）</option><option value="0">否（项目方）</option></select>
+
+
+<div style="display:flex;gap:10px;margin-top:12px;align-items:center;justify-content:flex-end">
+<button type="button" id="submitBtn" class="btn">提交申请</button>
+</div>
+</form>
+
+
+<div id="successBox" class="success" style="display:none">提交成功！我们将在 24 小时内电话/微信联系你，优先安排内测名额。</div>
+<div class="note">注：本申请仅用于社区团队长资格审核，平台承诺不公开个人隐私，申请即表示同意我们在社区进行邀请与合作沟通。</div>
+</div>
+
+
+<div class="card templates">
+<div style="font-weight:800">团队长私信包（3 种语气，复制即用）</div>
+<div class="muted" style="margin-top:6px">把下面模板复制到微信私聊，替换姓名与地区即可。</div>
+
+
+<div class="tpl" id="tpl1">
+<div style="font-weight:700">【邀请 - 正式/专业】</div>
+<div class="muted" style="margin-top:6px">你好 XX（姓名），我是【AI·私募共创圈】发起人 林先生。我们正在组建一个仅限50位的「团队长核心圈」，专门对接优质AI/私募项目与渠道资源，优先给予项目流量与分成合作。你作为XX区/XX项目的负责人非常适合，想邀请你加入首批核心成员，内部提供：项目优先对接、VC尽调支持、每周团队长专场。方便加个微信详聊吗？</div>
+<button class="copy" data-tpl="tpl1">复制模板</button>
+</div>
+
+
+<div class="tpl" id="tpl2">
+<div style="font-weight:700">【邀请 - 亲切/关系网】</div>
+<div class="muted" style="margin-top:6px">兄弟 XX，好久不见，我这边正在做一个 AI×私募 的小圈子，叫「AI·私募共创圈」，我们优先给团队长一些早期项目资源和渠道分成，想优先把你拉进来做合伙人式合作。可以加个微信聊一聊吗？</div>
+<button class="copy" data-tpl="tpl2">复制模板</button>
+</div>
+
+
+<div class="tpl" id="tpl3">
+<div style="font-weight:700">【邀请 - 简短/高效】</div>
+<div class="muted" style="margin-top:6px">XX，邀请你加入「AI·私募共创圈」团队长核心群：优先项目对接+分成。感兴趣加我微信：xxxx。</div>
+<button class="copy" data-tpl="tpl3">复制模板</button>
+</div>
+
+
+<div class="note">提示：复制按钮会将模板内容复制到剪贴板，方便你直接私聊。模板可根据实际情况微调。</div>
+</div>
+
+
+<footer>© AI·私募共创圈 · 团队长专属申请页</footer>
+</div>
+
+
+<script>
+// 本地模拟提交（可以替换为真实 API）
+const submitBtn = document.getElementById('submitBtn');
+const successBox = document.getElementById('successBox');
+submitBtn.addEventListener('click', ()=>{
+const name = document.getElementById('name').value.trim();
+const phone = document.getElementById('phone').value.trim();
+if(!name || !phone){alert('请填写姓名和手机号/微信号');return}
+const data = {
+name, phone, region: document.getElementById('region').value.trim(),
+scale: document.getElementById('scale').value.trim(),
+resources: document.getElementById('resources').value.trim(),
+isLeader: document.getElementById('isLeader').value
+};
+// 存到 localStorage（演示），真实使用请替换为 fetch POST 到你的后端
+const key = 'ai_vc_apply_list_v1';
+const list = JSON.parse(localStorage.getItem(key) || '[]');
+list.push({...data, date:new Date().toLocaleString()});
+localStorage.setItem(key, JSON.stringify(list));
+successBox.style.display = 'block';
+setTimeout(()=>{successBox.style.display='none';document.getElementById('applyForm').reset();},3000);
+});
+
+
+// 复制模板功能
+document.querySelectorAll('.copy').forEach(btn=>{
+btn.addEventListener('click', e=>{
+const id = btn.getAttribute('data-tpl');
+const tplNode = document.getElementById(id);
+const text = tplNode.querySelector('.muted').innerText;
+navigator.clipboard.writeText(text).then(()=>{
+btn.textContent = '已复制';
+setTimeout(()=>btn.textContent='复制模板',1500);
+}).catch(()=>{alert('复制失败，请手动选择复制')});
+});
+});
+</script>
+</body>
+</html>
